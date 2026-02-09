@@ -142,7 +142,9 @@ Currently, the plugin syncs all menus automatically. If you need to prevent sync
 == Upgrade Notice ==
 
 = 0.3.0 =
-Fixes a bug where the sync polling could get stuck indefinitely. Adds a 15-second timeout with animated ellipsis and a clear error message.
+* Updates key naming to work with Etch v1.0.
+* Fixes a bug where the sync polling could get stuck indefinitely.
+* Adds a 15-second timeout with animated ellipsis and a clear error message.
 
 = 0.2.0 =
 Adds the `mdlr_menu_item_json` filter so developers can customize the menu item JSON sent to Etch.
