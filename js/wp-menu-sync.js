@@ -166,16 +166,6 @@
 
 					firstParagraph.html(successMessage);
 
-					// If a key migration happened, append the migration message.
-					if (response.data.key_migrated) {
-						var migratedKey = response.data.key_migrated;
-						var migrationMessage = mdlrMenuSync.i18n.keyMigrated.replace('%s', migratedKey);
-						notice.append('<p>' + $('<div>').text(migrationMessage).html() + '</p>');
-
-						// Also hide the pre-save migration warning notice if it exists.
-						$('.mdlr-menu-key-migration-notice').hide();
-					}
-
 					// Hide checkbox if it exists (might not exist when PHP rendered "Syncing...").
 					var checkboxContainer = notice.find('label').closest('p');
 					if (checkboxContainer.length) {

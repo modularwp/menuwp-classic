@@ -377,28 +377,6 @@ class MDLR_Menu {
 		$sync_completed_key = 'mdlr_menu_sync_completed_' . $menu->slug;
 		set_transient( $sync_completed_key, true, MINUTE_IN_SECONDS );
 
-		// Check if a key migration happened (hyphenated slug was converted to underscores).
-		if ( $menu->slug !== $sanitized_key ) {
-			// Only show migration message if this is the first time creating the loop with the underscore key.
-			// If the existing entry already has the sanitized key, we've already notified the user.
-			$should_notify_migration = true;
-
-			if ( false !== $found_entry && isset( $found_entry['entry']['key'] ) && $found_entry['entry']['key'] === $sanitized_key ) {
-				// Entry already exists with the sanitized key - user was already notified.
-				$should_notify_migration = false;
-			}
-
-			if ( $should_notify_migration ) {
-				// Set transient with the new key value so JS can show migration message.
-				$key_migrated_key = 'mdlr_menu_key_migrated_' . $menu->slug;
-				set_transient( $key_migrated_key, $sanitized_key, MINUTE_IN_SECONDS );
-			}
-
-			// Clear the needs_key_migration transient since migration is complete.
-			$migration_key = 'mdlr_menu_needs_key_migration_' . $menu->slug;
-			delete_transient( $migration_key );
-		}
-
 		// Return true to indicate successful sync.
 		return true;
 	}
@@ -669,15 +647,6 @@ class MDLR_Menu {
 			return;
 		}
 
-		// Check if existing entry has a hyphenated key that needs migration.
-		if ( isset( $found_entry['entry']['key'] ) ) {
-			$existing_key = $found_entry['entry']['key'];
-			if ( $existing_key !== $this->sanitize_etch_key( $existing_key ) ) {
-				$migration_key = 'mdlr_menu_needs_key_migration_' . $menu->slug;
-				set_transient( $migration_key, $existing_key, HOUR_IN_SECONDS );
-			}
-		}
-
 		// Entry exists - check if it's a conflict (key field match but different array key).
 		// If array key doesn't match menu slug, it's a conflict because 'key' values must be unique.
 		if ( $found_entry['array_key'] !== $menu->slug ) {
@@ -737,27 +706,6 @@ class MDLR_Menu {
 		$menu = wp_get_nav_menu_object( $menu_id );
 		if ( ! $menu ) {
 			return;
-		}
-
-		// Check for key migration warning (hyphenated key needs to be converted to underscores).
-		$migration_key = 'mdlr_menu_needs_key_migration_' . $menu->slug;
-		$old_key = get_transient( $migration_key );
-		if ( false !== $old_key ) {
-			$new_key = $this->sanitize_etch_key( $old_key );
-			?>
-			<div class="notice notice-warning mdlr-menu-key-migration-notice">
-				<p>
-					<?php
-					printf(
-						/* translators: 1: old key with hyphens, 2: new key with underscores */
-						esc_html__( 'The menu key \'%1$s\' contains hyphens which are no longer supported by Etch. Saving this menu will update the key to \'%2$s\'. After this menu is synced, please update any Etch templates that reference this loop.', 'menuwp' ),
-						esc_html( $old_key ),
-						esc_html( $new_key )
-					);
-					?>
-				</p>
-			</div>
-			<?php
 		}
 
 		// Check for sync in progress status (to show "Syncing..." message).
@@ -894,8 +842,6 @@ class MDLR_Menu {
 					'failedToSyncMenu'           => __( 'Failed to sync menu to Etch. Please try again.', 'menuwp' ),
 					'allowSyncingDespiteConflict' => __( 'Allow syncing to Etch despite the conflict', 'menuwp' ),
 					'syncTimedOut'               => __( 'Sync to Etch timed out. Please try saving the menu again.', 'menuwp' ),
-					/* translators: %s is the new menu key with underscores instead of hyphens */
-					'keyMigrated'                => __( "The new menu key is '%s'. Please update any Etch templates that reference this loop.", 'menuwp' ),
 				),
 			)
 		);
@@ -966,18 +912,7 @@ class MDLR_Menu {
 		if ( false !== $sync_completed ) {
 			delete_transient( $sync_completed_key );
 
-			// Check if a key migration happened.
-			$key_migrated_key = 'mdlr_menu_key_migrated_' . $menu_slug;
-			$key_migrated = get_transient( $key_migrated_key );
-
-			$response_data = array( 'sync_completed' => true );
-
-			if ( false !== $key_migrated ) {
-				delete_transient( $key_migrated_key );
-				$response_data['key_migrated'] = $key_migrated;
-			}
-
-			wp_send_json_success( $response_data );
+			wp_send_json_success( array( 'sync_completed' => true ) );
 		}
 
 		// Check if sync failed.
