@@ -3,7 +3,7 @@
  * Plugin Name: MenuWP Classic
  * Plugin URI: https://menuwp.com
  * Description: A WordPress plugin that enables the menu editor functionality.
- * Version: 0.3.0
+ * Version: 0.4.0
  * Author: ModularWP
  * Author URI: https://modularwp.com
  * License: GPL v2 or later
@@ -462,8 +462,13 @@ class MDLR_Menu {
 
 		// Build item map with all menu items.
 		foreach ( $menu_items as $item ) {
+			// Decode HTML entities in title since WordPress stores them encoded.
+			// Etch will re-encode when outputting, so we need raw characters here
+			// to avoid double-encoding (e.g., "&amp;amp;" instead of "&amp;").
+			$label = html_entity_decode( $item->title, ENT_QUOTES | ENT_HTML5, 'UTF-8' );
+
 			$json_item = array(
-				'label' => $item->title,
+				'label' => $label,
 				'url'   => $item->url,
 			);
 
@@ -803,7 +808,7 @@ class MDLR_Menu {
 			if ( 'slug_conflict' === $notice_type ) {
 				$message = __( 'This menu ID is already being used by an Etch loop. This menu will be saved to WordPress but not sync to Etch to prevent overwriting it.', 'menuwp' );
 			} else {
-				$message = __( 'The Etch loop associated with this menu has been modified or is no longer in sync. This menu will be saved to WordPress but not to Etch.', 'menuwp' );
+				$message = __( 'The Etch loop associated with this menu is no longer in sync. This can happen if the Etch loop is editited, or if page titles or other items referenced by this menu have been changed. This menu will be saved to WordPress but not to Etch.', 'menuwp' );
 			}
 			$notice_class = 'notice-info';
 			$show_checkbox = true;

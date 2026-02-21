@@ -3,7 +3,7 @@ Contributors: modularwp
 Tags: menu, navigation, sync, etch
 Requires at least: 6.8
 Tested up to: 6.8
-Stable tag: 0.3.0
+Stable tag: 0.4.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -118,6 +118,10 @@ Currently, the plugin syncs all menus automatically. If you need to prevent sync
 
 == Changelog ==
 
+= 0.4.0 =
+* Fix double-encoding of HTML entities in menu item labels (e.g., "&amp;" becoming "&amp;amp;")
+* Improve out-of-sync notice message to clarify possible causes
+
 = 0.3.0 =
 * Fix sync polling getting stuck indefinitely when sync fails silently
 * Add animated ellipsis to "Syncing to Etch..." notice for visual feedback
@@ -140,6 +144,10 @@ Currently, the plugin syncs all menus automatically. If you need to prevent sync
 * AJAX-powered menu synchronization
 
 == Upgrade Notice ==
+
+= 0.4.0 =
+* Fixes double-encoding of HTML entities in menu item labels.
+* Improves the out-of-sync notice to clarify possible causes.
 
 = 0.3.0 =
 * Updates key naming to work with Etch v1.0.
