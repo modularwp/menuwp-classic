@@ -3,7 +3,7 @@ Contributors: modularwp
 Tags: menu, navigation, sync, etch
 Requires at least: 6.8
 Tested up to: 6.8
-Stable tag: 0.4.0
+Stable tag: 0.5.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -118,6 +118,10 @@ Currently, the plugin syncs all menus automatically. If you need to prevent sync
 
 == Changelog ==
 
+= 0.5.0 =
+* Enable menu sync for WordPress REST API requests (menus created or updated via the REST API now sync to Etch)
+* Remove key migration notices for hyphen-to-underscore conversion (conversion still happens automatically)
+
 = 0.4.0 =
 * Fix double-encoding of HTML entities in menu item labels (e.g., "&amp;" becoming "&amp;amp;")
 * Improve out-of-sync notice message to clarify possible causes
@@ -144,6 +148,10 @@ Currently, the plugin syncs all menus automatically. If you need to prevent sync
 * AJAX-powered menu synchronization
 
 == Upgrade Notice ==
+
+= 0.5.0 =
+* Menus created or updated via the WordPress REST API now sync to Etch automatically.
+* Removes key migration notices (hyphen-to-underscore conversion still happens automatically).
 
 = 0.4.0 =
 * Fixes double-encoding of HTML entities in menu item labels.

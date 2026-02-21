@@ -3,7 +3,7 @@
  * Plugin Name: MenuWP Classic
  * Plugin URI: https://menuwp.com
  * Description: A WordPress plugin that enables the menu editor functionality.
- * Version: 0.4.0
+ * Version: 0.5.0
  * Author: ModularWP
  * Author URI: https://modularwp.com
  * License: GPL v2 or later
@@ -175,8 +175,8 @@ class MDLR_Menu {
 	 * @since 0.1.0
 	 */
 	public function sync_queued_menus() {
-		// Exit if not in admin.
-		if ( ! is_admin() ) {
+		// Exit if not in admin or REST API request.
+		if ( ! is_admin() && ! ( defined( 'REST_REQUEST' ) && REST_REQUEST ) ) {
 			return;
 		}
 
